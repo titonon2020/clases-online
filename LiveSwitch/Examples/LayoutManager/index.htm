@@ -1,0 +1,881 @@
+﻿<html>
+<head>
+    <title>Layout Manager</title>
+    <script type="text/javascript" src="Scripts/fm.liveswitch.js"></script>
+    <style type="text/css">
+        * { font-family: sans-serif; font-size: 8pt; }
+        fieldset { display: inline; vertical-align: top; height: 100%; }
+        .fieldsets { width: 640px; height: 128px; position: relative; margin: 4px 0 16px 0; }
+        input[type=text], input[type=number] { width: 56px; height: 20px; }
+    </style>
+</head>
+<body>
+    <div id="container" style="width: 640px; height: 480px; background-color: black; resize: both; overflow: auto;"></div>
+    <div class="fieldsets">
+        <fieldset>
+            <legend>Preset:</legend>
+            <div><input type="radio" name="preset" id="radPresetFacetime" /> <label for="radPresetFacetime">Facetime</label></div>
+            <div><input type="radio" name="preset" id="radPresetGoogle" /> <label for="radPresetGoogle">Google</label></div>
+            <div><input type="radio" name="preset" id="radPresetSkype" /> <label for="radPresetSkype">Skype</label></div>
+            <div><input type="checkbox" id="chkPresetMobile" /> <label for="chkPresetMobile">Mobile</label></div>
+        </fieldset>
+        <fieldset>
+            <legend>Mode:</legend>
+            <div><input type="radio" name="mode" id="radModeFloatLocal" /> <label for="radModeFloatLocal">Float (Local)</label></div>
+            <div><input type="radio" name="mode" id="radModeFloatRemote" /> <label for="radModeFloatRemote">Float (Remote)</label></div>
+            <div><input type="radio" name="mode" id="radModeBlock" /> <label for="radModeBlock">Block</label></div>
+            <div><input type="radio" name="mode" id="radModeInline" /> <label for="radModeInline">Inline</label></div>
+            <div><input type="radio" name="mode" id="radModeInlineOverflow" /> <label for="radModeInlineOverflow">Inline Overflow</label></div>
+        </fieldset>
+        <fieldset>
+            <legend>Direction:</legend>
+            <div>
+                <div style="float: right; width: 62px; height: 38px; margin: 0 0 4px 8px; position: relative;">
+                    <div style="width: 50%; height: 50%; background-color: red; position: absolute; top: 0; left: 0;"></div>
+                    <div style="width: 100%; height: 50%; background-color: blue; position: absolute; top: 50%; left: 0;"></div>
+                    <div style="width: 50%; height: 50%; background-color: green; position: absolute; top: 0; left: 50%;"></div>
+                </div>
+                <input type="radio" name="direction" id="radDirectionHorizontal" /> <label for="radDirectionHorizontal">Horizontal</label>
+                <div style="clear: both;"></div>
+            </div>
+            <div>
+                <div style="float: right; width: 62px; height: 38px; margin: 0 0 4px 0; position: relative;">
+                    <div style="width: 50%; height: 50%; background-color: red; position: absolute; top: 0; left: 0;"></div>
+                    <div style="width: 50%; height: 100%; background-color: blue; position: absolute; top: 0; left: 50%;"></div>
+                    <div style="width: 50%; height: 50%; background-color: green; position: absolute; top: 50%; left: 0;"></div>
+                </div>
+                <input type="radio" name="direction" id="radDirectionVertical" /> <label for="radDirectionVertical">Vertical</label>
+                <div style="clear: both;"></div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Alignment:</legend>
+            <table cellpadding="0" cellspacing="0" border="0" style="height: 84px">
+                <tr>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentTopLeft" />
+                        <label for="radAlignmentTopLeft">Top-Left</label>
+                    </td>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentTop" />
+                        <label for="radAlignmentTop">Top</label>
+                    </td>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentTopRight" />
+                        <label for="radAlignmentTopRight">Top-Right</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentLeft" />
+                        <label for="radAlignmentLeft">Left</label>
+                    </td>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentCenter" />
+                        <label for="radAlignmentCenter">Center</label>
+                    </td>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentRight" />
+                        <label for="radAlignmentRight">Right</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentBottomLeft" />
+                        <label for="radAlignmentBottomLeft">Bottom-Left</label>
+                    </td>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentBottom" />
+                        <label for="radAlignmentBottom">Bottom</label>
+                    </td>
+                    <td>
+                        <input type="radio" name="alignment" id="radAlignmentBottomRight" />
+                        <label for="radAlignmentBottomRight">Bottom-Right</label>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <div class="fieldsets">
+        <fieldset>
+            <legend>Global:</legend>
+            <div><input type="checkbox" id="chkLocal" /> <label for="chkLocal">Local User</label></div>
+            <div><label for="numRemoteCount">Remote Users:</label></div>
+            <div><input type="number" id="numRemoteCount" min="0" max="1000" /></div>
+            <div><label for="numInlineMargin">Inline Margin:</label></div>
+            <div><input type="number" id="numInlineMargin" min="0" max="100" /></div>
+        </fieldset>
+        <fieldset>
+            <legend>Float Parameters:</legend>
+            <table cellpadding="0" cellspacing="0" border="0" style="height: 84px">
+                <tr>
+                    <td><label for="numFloatWidth">Width (px):</label></td>
+                    <td><input type="number" id="numFloatWidth" min="0" max="100" /></td>
+                    <td><label for="numFloatWidthPercent">Width (%):</label></td>
+                    <td><input type="number" id="numFloatWidthPercent" min="0" max="1" step="0.01" /></td>
+                </tr>
+                <tr>
+                    <td><label for="numFloatHeight">Height (px):</label></td>
+                    <td><input type="number" id="numFloatHeight" min="0" max="100" /></td>
+                    <td><label for="numFloatHeightPercent">Height (%):</label></td>
+                    <td><input type="number" id="numFloatHeightPercent" min="0" max="1" step="0.01" /></td>
+                </tr>
+                <tr>
+                    <td><label for="numFloatMarginX">MarginX (px):</label></td>
+                    <td><input type="number" id="numFloatMarginX" min="0" max="100" /></td>
+                    <td><label for="numFloatMarginXPercent">MarginX (%):</label></td>
+                    <td><input type="number" id="numFloatMarginXPercent" min="0" max="1" step="0.01" /></td>
+                </tr>
+                <tr>
+                    <td><label for="numFloatMarginY">MarginY (px):</label></td>
+                    <td><input type="number" id="numFloatMarginY" min="0" max="100" /></td>
+                    <td><label for="numFloatMarginYPercent">MarginY (%):</label></td>
+                    <td><input type="number" id="numFloatMarginYPercent" min="0" max="1" step="0.01" /></td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Block Parameters:</legend>
+            <table cellpadding="0" cellspacing="0" border="0" style="height: 84px">
+                <tr>
+                    <td><label for="numBlockWidth">Width (px):</label></td>
+                    <td><input type="number" id="numBlockWidth" min="0" max="100" /></td>
+                    <td><label for="numBlockWidthPercent">Width (%):</label></td>
+                    <td><input type="number" id="numBlockWidthPercent" min="0" max="1" step="0.01" /></td>
+                </tr>
+                <tr>
+                    <td><label for="numBlockHeight">Height (px):</label></td>
+                    <td><input type="number" id="numBlockHeight" min="0" max="100" /></td>
+                    <td><label for="numBlockHeightPercent">Height (%):</label></td>
+                    <td><input type="number" id="numBlockHeightPercent" min="0" max="1" step="0.01" /></td>
+                </tr>
+                <tr>
+                    <td><label for="numBlockMarginX">MarginX (px):</label></td>
+                    <td><input type="number" id="numBlockMarginX" min="0" max="100" /></td>
+                    <td><label for="numBlockMarginXPercent">MarginX (%):</label></td>
+                    <td><input type="number" id="numBlockMarginXPercent" min="0" max="1" step="0.01" /></td>
+                </tr>
+                <tr>
+                    <td><label for="numBlockMarginY">MarginY (px):</label></td>
+                    <td><input type="number" id="numBlockMarginY" min="0" max="100" /></td>
+                    <td><label for="numBlockMarginYPercent">MarginY (%):</label></td>
+                    <td><input type="number" id="numBlockMarginYPercent" min="0" max="1" step="0.01" /></td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <script type="text/javascript">
+        var onChange = function(el, fn) { fm.liveswitch.Util.observe(el, 'change', fn); };
+
+        var suspendEvents = false;
+        var updateFormValues = function() {
+            suspendEvents = true;
+
+            chkPresetMobile.checked = fm.liveswitch.Platform.getInstance().getIsMobile();
+
+            numRemoteCount.value = layoutManager.getRemoteViews().length;
+
+            switch (layoutManager.getMode())
+            {
+                case fm.liveswitch.LayoutMode.FloatLocal:
+                    radModeFloatLocal.checked = true;
+                    break;
+                case fm.liveswitch.LayoutMode.FloatRemote:
+                    radModeFloatRemote.checked = true;
+                    break;
+                case fm.liveswitch.LayoutMode.Block:
+                    radModeBlock.checked = true;
+                    break;
+                case fm.liveswitch.LayoutMode.Inline:
+                    radModeInline.checked = true;
+                    break;
+                case fm.liveswitch.LayoutMode.InlineOverflow:
+                    radModeInlineOverflow.checked = true;
+                    break;
+            }
+
+            switch (layoutManager.getDirection())
+            {
+                case fm.liveswitch.LayoutDirection.Horizontal:
+                    radDirectionHorizontal.checked = true;
+                    break;
+                case fm.liveswitch.LayoutDirection.Vertical:
+                    radDirectionVertical.checked = true;
+                    break;
+            }
+
+            switch (layoutManager.getAlignment())
+            {
+                case fm.liveswitch.LayoutAlignment.TopLeft:
+                    radAlignmentTopLeft.checked = true;
+                    break;
+                case fm.liveswitch.LayoutAlignment.Top:
+                    radAlignmentTop.checked = true;
+                    break;
+                case fm.liveswitch.LayoutAlignment.TopRight:
+                    radAlignmentTopRight.checked = true;
+                    break;
+                case fm.liveswitch.LayoutAlignment.Left:
+                    radAlignmentLeft.checked = true;
+                    break;
+                case fm.liveswitch.LayoutAlignment.Center:
+                    radAlignmentCenter.checked = true;
+                    break;
+                case fm.liveswitch.LayoutAlignment.Right:
+                    radAlignmentRight.checked = true;
+                    break;
+                case fm.liveswitch.LayoutAlignment.BottomLeft:
+                    radAlignmentBottomLeft.checked = true;
+                    break;
+                case fm.liveswitch.LayoutAlignment.Bottom:
+                    radAlignmentBottom.checked = true;
+                    break;
+                case fm.liveswitch.LayoutAlignment.BottomRight:
+                    radAlignmentBottomRight.checked = true;
+                    break;
+            }
+
+            numFloatWidth.value = layoutManager.getFloatWidth();
+            numFloatHeight.value = layoutManager.getFloatHeight();
+            numFloatMarginX.value = layoutManager.getFloatMarginX();
+            numFloatMarginY.value = layoutManager.getFloatMarginY();
+            numFloatWidthPercent.value = layoutManager.getFloatWidthPercent();
+            numFloatHeightPercent.value = layoutManager.getFloatHeightPercent();
+            numFloatMarginXPercent.value = layoutManager.getFloatMarginXPercent();
+            numFloatMarginYPercent.value = layoutManager.getFloatMarginYPercent();
+
+            numBlockWidth.value = layoutManager.getBlockWidth();
+            numBlockHeight.value = layoutManager.getBlockHeight();
+            numBlockMarginX.value = layoutManager.getBlockMarginX();
+            numBlockMarginY.value = layoutManager.getBlockMarginY();
+            numBlockWidthPercent.value = layoutManager.getBlockWidthPercent();
+            numBlockHeightPercent.value = layoutManager.getBlockHeightPercent();
+            numBlockMarginXPercent.value = layoutManager.getBlockMarginXPercent();
+            numBlockMarginYPercent.value = layoutManager.getBlockMarginYPercent();
+
+            numInlineMargin.value = layoutManager.getInlineMargin();
+
+            suspendEvents = false;
+        };
+
+        var colorLookup =
+        [
+            '#ff0000',
+            '#ff4500',
+            '#ffa500',
+            '#ffff00',
+            '#9acd32',
+            '#008000',
+            '#87ceeb',
+            '#0000ff',
+            '#ee82ee',
+            '#a52a2a',
+            '#00ffff',
+            '#ffd700',
+            '#add8e6',
+            '#ff00ff',
+            '#ffc0cb',
+            '#d2b48c',
+            '#800000',
+            '#fa8072',
+            '#40e0d0',
+            '#32cd32',
+            '#000080',
+            '#da70d6',
+            '#f4a460',
+            '#008080'
+        ];
+
+        onChange(radPresetFacetime, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.applyPreset(fm.liveswitch.LayoutPreset.getFacetime());
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radPresetGoogle, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.applyPreset(fm.liveswitch.LayoutPreset.getGoogleHangouts());
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radPresetSkype, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.applyPreset(fm.liveswitch.LayoutPreset.getSkype());
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(chkPresetMobile, function()
+        {
+            if (!suspendEvents)
+            {
+                if (chkPresetMobile.checked)
+                {
+                    fm.liveswitch.Platform.getInstance().setIsMobile(true);
+                }
+                else
+                {
+                    fm.liveswitch.Platform.getInstance().setIsMobile(false);
+                }
+
+                if (radPresetFacetime.checked)
+                {
+                    layoutManager.applyPreset(fm.liveswitch.LayoutPreset.getFacetime());
+                }
+                else if (radPresetGoogle.checked)
+                {
+                    layoutManager.applyPreset(fm.liveswitch.LayoutPreset.getGoogleHangouts());
+                }
+                else if (radPresetSkype.checked)
+                {
+                    layoutManager.applyPreset(fm.liveswitch.LayoutPreset.getSkype());
+                }
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(chkLocal, function()
+        {
+            if (!suspendEvents)
+            {
+                if (chkLocal.checked)
+                {
+                    layoutManager.setLocalView(generateView(640, 480, '#d3d3d3', true));
+                }
+                else
+                {
+                    layoutManager.unsetLocalView();
+                }
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numRemoteCount, function()
+        {
+            if (!suspendEvents)
+            {
+                var newCount = numRemoteCount.value;
+                var currentCount = layoutManager.getRemoteViews().length;
+                var i = currentCount;
+
+                // add feeds
+                if (newCount > currentCount)
+                {
+                    var peerIds = [];
+                    var remoteViews = [];
+                    while (newCount > currentCount)
+                    {
+                        peerIds.push(i.toString());
+                        remoteViews.push(generateView(640, 480, colorLookup[i % colorLookup.length], false));
+                        i++; currentCount++;
+                    }
+                    layoutManager.addRemoteViews(peerIds, remoteViews);
+                }
+
+                // remove feeds
+                if (newCount < currentCount)
+                {
+                    var peerIds = [];
+                    while (newCount < currentCount)
+                    {
+                        i--; currentCount--;
+                        peerIds.push(i.toString());
+                    }
+                    layoutManager.removeRemoteViews(peerIds);
+                }
+            }
+        });
+
+        onChange(radModeFloatLocal, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setMode(fm.liveswitch.LayoutMode.FloatLocal);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radModeFloatRemote, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setMode(fm.liveswitch.LayoutMode.FloatRemote);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radModeBlock, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setMode(fm.liveswitch.LayoutMode.Block);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radModeInline, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setMode(fm.liveswitch.LayoutMode.Inline);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radModeInlineOverflow, function () {
+            if (!suspendEvents) {
+                layoutManager.setMode(fm.liveswitch.LayoutMode.InlineOverflow);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radDirectionHorizontal, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setDirection(fm.liveswitch.LayoutDirection.Horizontal);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radDirectionVertical, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setDirection(fm.liveswitch.LayoutDirection.Vertical);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentTopLeft, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.TopLeft);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentTop, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.Top);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentTopRight, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.TopRight);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentLeft, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.Left);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentCenter, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.Center);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentRight, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.Right);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentBottomLeft, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.BottomLeft);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentBottom, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.Bottom);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(radAlignmentBottomRight, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setAlignment(fm.liveswitch.LayoutAlignment.BottomRight);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numFloatWidth, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setFloatWidth(numFloatWidth.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numFloatHeight, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setFloatHeight(numFloatHeight.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numFloatMarginX, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setFloatMarginX(numFloatMarginX.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numFloatMarginY, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setFloatMarginY(numFloatMarginY.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numFloatWidthPercent, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setFloatWidthPercent(numFloatWidthPercent.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numFloatHeightPercent, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setFloatHeightPercent(numFloatHeightPercent.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numFloatMarginXPercent, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setFloatMarginXPercent(numFloatMarginXPercent.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numFloatMarginYPercent, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setFloatMarginYPercent(numFloatMarginYPercent.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numBlockWidth, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setBlockWidth(numBlockWidth.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numBlockHeight, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setBlockHeight(numBlockHeight.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numBlockMarginX, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setBlockMarginX(numBlockMarginX.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numBlockMarginY, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setBlockMarginY(numBlockMarginY.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numBlockWidthPercent, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setBlockWidthPercent(numBlockWidthPercent.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numBlockHeightPercent, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setBlockHeightPercent(numBlockHeightPercent.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numBlockMarginXPercent, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setBlockMarginXPercent(numBlockMarginXPercent.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numBlockMarginYPercent, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setBlockMarginYPercent(numBlockMarginYPercent.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        onChange(numInlineMargin, function()
+        {
+            if (!suspendEvents)
+            {
+                layoutManager.setInlineMargin(numInlineMargin.value * 1);
+                layoutManager.layout();
+                updateFormValues();
+            }
+        });
+
+        let generatePluginView = function(width, height, color, local) {
+
+            // from PluginDomVideoSink, this is valid until that changes
+
+            let container = document.createElement('div');
+
+            if (local) {
+                container.className = 'fm-video fm-video-local';
+            } else {
+                container.className = 'fm-video fm-video-remote';
+            }
+
+            var underlay = document.createElement('iframe');
+            underlay.src = 'about:blank';
+            underlay.setAttribute('allowTransparency', 'true');
+            underlay.setAttribute('frameBorder', '0');
+            underlay.style.border = '0';
+            underlay.style.backgroundColor = '#000';
+            underlay.style.position = 'absolute';
+            underlay.style.top = '0';
+            underlay.style.left = '0';
+            underlay.style.width = '100%';
+            underlay.style.height = '100%';
+
+            container.appendChild(underlay);
+
+            let axo = document.createElement('object');
+            axo.id = Guid.newGuid().toString();
+            axo.setAttribute('codebase', fm.liveswitch.Plugin.getPluginConfig().getActiveXPath());
+            axo.setAttribute('CLASSID', 'clsid:' + fm.liveswitch.PluginConstants.getDomVideoSinkClassId());
+            axo.style.position = 'absolute';
+            axo.style.top = '0';
+            axo.style.left = '0';
+            axo.style.width = '100%';
+            axo.style.height = '100%';
+			window.setTimeout(() => {
+                container.appendChild(axo);
+			}, 1);
+
+            // end
+
+            container.style.backgroundColor = color;
+            
+            axo.GetVideoWidth = function() {
+                return width;
+            };
+            axo.GetVideoHeight = function() {
+                return height;
+            };
+
+            return container;
+        };
+
+        let generateWebRtcView = function(width, height, color, local) {
+
+            // from PluginDomVideoSink, this is valid until that changes
+
+            let container = document.createElement('div');
+            container.style.position = 'relative';
+            container.style.overflow = 'hidden';
+            container.className = 'fm-video';
+
+            if (local) {
+                container.className = 'fm-video fm-video-local';
+            } else {
+                container.className = 'fm-video fm-video-remote';
+            }
+
+            let video = document.createElement('video');
+            video.style.position = 'absolute';
+            video.setAttribute('autoplay', 'autoplay');
+            video.setAttribute('playsinline', 'playsinline');
+            video.muted = true;
+            video.style.width = '100%';
+            video.style.height = '100%';
+
+            container.appendChild(video);
+
+            // end
+
+            let canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+
+            var context = canvas.getContext("2d");
+            context.fillStyle = color;
+            context.fillRect(0, 0, width, height);
+
+            let canvasStream = canvas.captureStream(1);
+
+            video.srcObject = canvasStream;
+
+            return container;
+        };
+
+        let generateView = function(width, height, color, local)
+        {
+            if (fm.liveswitch.Plugin.useActiveX()) 
+            {
+                return generatePluginView(width, height, color, local);
+            } 
+            else if (fm.liveswitch.Plugin.useNative()) 
+            {
+                return generateWebRtcView(width, height, color, local);
+            } 
+            else
+            {
+                throw new Exception('Browser does not support WebRTC/ORTC and no plugin found.');
+            }
+        };
+
+        let raiseChangeEvent = function(element)
+        {
+            if (fm.liveswitch.Plugin.useActiveX())
+            {
+                element.fireEvent('onchange', document.createEventObject());
+            }
+            else if (fm.liveswitch.Plugin.useNative())
+            {
+                var event = document.createEvent("HTMLEvents");
+                event.initEvent('change', false, true);
+                element.dispatchEvent(event);
+            }
+            else
+            {
+                throw new Exception('Browser does not support WebRTC/ORTC and no plugin found.');
+            }
+        };
+
+        let layoutManager = new fm.liveswitch.DomLayoutManager(document.getElementById('container'));
+        updateFormValues();
+
+        fm.liveswitch.Util.addOnLoad(function()
+        {
+            let pluginConfig = new fm.liveswitch.PluginConfig();
+            pluginConfig.setActiveXPath("./FM.liveswitch.ActiveX.cab");
+
+            fm.liveswitch.Plugin.install(pluginConfig).then(function()
+            {
+                chkLocal.checked = true;
+                raiseChangeEvent(chkLocal);
+
+                numRemoteCount.value = 2;
+                raiseChangeEvent(numRemoteCount);
+            }, function(ex)
+            {
+                alert(ex.message);
+            });
+        });
+    </script>
+</body>
+</html>
